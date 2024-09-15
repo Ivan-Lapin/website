@@ -1,0 +1,117 @@
+{{define "main"}}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Main Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f2f2f2;
+    }
+
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0;
+    }
+
+    .id {
+      font-size: 0.4em; 
+      color: rgb(249, 149, 149);
+  }
+
+    .link {
+      color: aqua;
+    }
+
+    main {
+      padding: 20px;
+    }
+
+    .article {
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+      padding: 20px;
+    }
+
+    .article h2 {
+      margin-top: 0;
+    }
+
+    .article p {
+      line-height: 1.5;
+    }
+
+    .article img {
+      max-width: 100%;
+      height: auto;
+      margin-bottom: 10px;
+    }
+
+    footer {
+      background-color: #333;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>My Blog</h1>
+    <a class="link" href="/create">Create aricle</a>
+  </header>
+
+  <main>
+    {{range .}}
+    <div class="article">
+      <div>
+        <p class="id">{{.ID}}</p>
+        <h2>{{.Title}}</h2>
+      </div>
+      <p><strong>Автор:</strong> {{.Name}}</p>
+      <p>{{.Content}}</p>
+      <button onclick="deleteArticle('{{.ID}}')">Delete</button>
+
+    </div>
+    {{end}}
+  </main>
+
+  <footer>
+    <p>&copy; 2023 Мой Блог. Все права защищены.</p>
+  </footer>
+
+  <script>
+    function deleteArticle(articleId) {
+      fetch(`/delete/${articleId}`, {
+        method: 'DELETE',
+      })
+      .then(response => {
+        if (response.ok) {
+          // Удаляем статью из DOM, если удаление на сервере прошло успешно
+          const article = document.querySelector(`button[onclick*="${articleId}"]`).parentElement;
+          article.remove();
+        } else {
+          alert('Ошибка при удалении статьи.');
+        }
+      })
+      .catch(error => {
+        console.error('Ошибка:', error);
+      });
+    }
+</script>
+
+</body>
+</html>
+{{end}}
